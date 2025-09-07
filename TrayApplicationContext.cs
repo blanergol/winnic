@@ -9,6 +9,7 @@ namespace Winnic
         private readonly NotifyIcon _notifyIcon;
         private readonly ContextMenuStrip _menu;
         private readonly ToolStripMenuItem _settingsItem;
+        private readonly ToolStripMenuItem _aboutItem;
         private readonly ToolStripMenuItem _exitItem;
 
         private readonly WindowCenterService _windowCenterService;
@@ -25,8 +26,9 @@ namespace Winnic
 
             _menu = new ContextMenuStrip();
             _settingsItem = new ToolStripMenuItem("Настройки…", null, OnOpenSettings);
+            _aboutItem = new ToolStripMenuItem("О программе…", null, OnOpenAbout);
             _exitItem = new ToolStripMenuItem("Выход", null, OnExit);
-            _menu.Items.AddRange(new ToolStripItem[] { _settingsItem, new ToolStripSeparator(), _exitItem });
+            _menu.Items.AddRange(new ToolStripItem[] { _settingsItem, new ToolStripSeparator(), _aboutItem, new ToolStripSeparator(), _exitItem });
 
             _notifyIcon = new NotifyIcon
             {
@@ -143,6 +145,12 @@ namespace Winnic
             _notifyIcon.Visible = false;
             _notifyIcon.Dispose();
             ExitThread();
+        }
+
+        private void OnOpenAbout(object? sender, EventArgs e)
+        {
+            using var form = new AboutForm();
+            form.ShowDialog();
         }
 
         private void ShowBalloon(string text)
