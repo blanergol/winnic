@@ -1,0 +1,41 @@
+# Build outputs
+bin/
+obj/
+TestResults/
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+*.rsuser
+
+# IDE
+.vs/
+.idea/
+*.swp
+*.sln.iml
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# Publish artifacts
+publish/
+
+# Dotnet
+artifacts/
+
+# Env/config
+*.env
+*.local.json
+
+
