@@ -1,6 +1,4 @@
-using System;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace Winnic
 {
@@ -69,6 +67,71 @@ namespace Winnic
             int targetY = mi.rcWork.Top + (mi.rcWork.Bottom - mi.rcWork.Top - height) / 2;
 
             if (!MoveWindow(hwnd, targetX, targetY, width, height, true))
+                throw new InvalidOperationException("Не удалось переместить окно");
+        }
+
+        public void SnapForegroundWindowLeftHalf()
+        {
+            var hwnd = GetForegroundWindow();
+            if (hwnd == IntPtr.Zero)
+                throw new InvalidOperationException("Нет активного окна");
+
+            if (!GetWindowRect(hwnd, out var rect))
+                throw new InvalidOperationException("Не удалось получить размер окна");
+
+            var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+            var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
+            bool gotMonitor = hmon != IntPtr.Zero && GetMonitorInfo(hmon, ref mi);
+
+            if (!gotMonitor)
+            {
+                var screen = Screen.FromHandle(hwnd);
+                var wa = screen.WorkingArea;
+                mi.rcWork = new RECT { Left = wa.Left, Top = wa.Top, Right = wa.Right, Bottom = wa.Bottom };
+            }
+
+            int workWidth = mi.rcWork.Right - mi.rcWork.Left;
+            int workHeight = mi.rcWork.Bottom - mi.rcWork.Top;
+            int targetWidth = workWidth / 2;
+            int targetHeight = workHeight;
+            int targetX = mi.rcWork.Left;
+            int targetY = mi.rcWork.Top;
+
+            // Сначала вернуть окно в нормальное состояние
+            ShowWindow(hwnd, SW_SHOWNORMAL);
+            if (!MoveWindow(hwnd, targetX, targetY, targetWidth, targetHeight, true))
+                throw new InvalidOperationException("Не удалось переместить окно");
+        }
+
+        public void SnapForegroundWindowRightHalf()
+        {
+            var hwnd = GetForegroundWindow();
+            if (hwnd == IntPtr.Zero)
+                throw new InvalidOperationException("Нет активного окна");
+
+            if (!GetWindowRect(hwnd, out var rect))
+                throw new InvalidOperationException("Не удалось получить размер окна");
+
+            var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+            var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
+            bool gotMonitor = hmon != IntPtr.Zero && GetMonitorInfo(hmon, ref mi);
+
+            if (!gotMonitor)
+            {
+                var screen = Screen.FromHandle(hwnd);
+                var wa = screen.WorkingArea;
+                mi.rcWork = new RECT { Left = wa.Left, Top = wa.Top, Right = wa.Right, Bottom = wa.Bottom };
+            }
+
+            int workWidth = mi.rcWork.Right - mi.rcWork.Left;
+            int workHeight = mi.rcWork.Bottom - mi.rcWork.Top;
+            int targetWidth = workWidth / 2;
+            int targetHeight = workHeight;
+            int targetX = mi.rcWork.Left + workWidth - targetWidth;
+            int targetY = mi.rcWork.Top;
+
+            ShowWindow(hwnd, SW_SHOWNORMAL);
+            if (!MoveWindow(hwnd, targetX, targetY, targetWidth, targetHeight, true))
                 throw new InvalidOperationException("Не удалось переместить окно");
         }
 

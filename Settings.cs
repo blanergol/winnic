@@ -1,24 +1,24 @@
 using System.Text.Json.Serialization;
-using System.Windows.Forms;
 
 namespace Winnic
 {
     internal sealed class AppSettings
     {
-        // Хоткей центрирования
-        public HotkeyModifiers Modifiers { get; set; } = HotkeyModifiers.Control | HotkeyModifiers.Alt;
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys Key { get; set; } = Keys.C; // Ctrl+Alt+C по умолчанию
+        // Общие модификаторы для всех хоткеев
+        public HotkeyModifiers CommonModifiers { get; set; } = HotkeyModifiers.Control | HotkeyModifiers.Alt;
 
-        // Хоткей разворота
-        public HotkeyModifiers MaximizeModifiers { get; set; } = HotkeyModifiers.Control | HotkeyModifiers.Alt;
+        // Основные клавиши по командам
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys MaximizeKey { get; set; } = Keys.Enter; // Ctrl+Alt+Enter по умолчанию
+        public Keys Key { get; set; } = Keys.C; // Центрирование — клавиша
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Keys MaximizeKey { get; set; } = Keys.Enter; // Разворот — клавиша
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Keys RestoreKey { get; set; } = Keys.Back; // Восстановление — клавиша
 
-        // Хоткей восстановления предыдущего состояния
-        public HotkeyModifiers RestoreModifiers { get; set; } = HotkeyModifiers.Control | HotkeyModifiers.Alt;
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys RestoreKey { get; set; } = Keys.Back; // Ctrl+Alt+Backspace по умолчанию
+        public Keys LeftKey { get; set; } = Keys.Left; // Левая половина — клавиша
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Keys RightKey { get; set; } = Keys.Right; // Правая половина — клавиша
 
         // Автозапуск
         public bool AutoStart { get; set; } = false;

@@ -1,7 +1,3 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace Winnic
 {
     internal class TrayApplicationContext : ApplicationContext
@@ -11,6 +7,7 @@ namespace Winnic
         private readonly ToolStripMenuItem _settingsItem;
         private readonly ToolStripMenuItem _aboutItem;
         private readonly ToolStripMenuItem _exitItem;
+        private readonly Icon _icon;
 
         private readonly WindowCenterService _windowCenterService;
         private readonly HotkeyManager _hotkeyManager;
@@ -30,10 +27,11 @@ namespace Winnic
             _exitItem = new ToolStripMenuItem("Выход", null, OnExit);
             _menu.Items.AddRange(new ToolStripItem[] { _settingsItem, new ToolStripSeparator(), _aboutItem, new ToolStripSeparator(), _exitItem });
 
+            _icon = IconFactory.CreateAppIcon();
             _notifyIcon = new NotifyIcon
             {
                 Text = "Winnic",
-                Icon = IconFactory.CreateAppIcon(),
+                Icon = _icon,
                 Visible = true,
                 ContextMenuStrip = _menu
             };
@@ -51,7 +49,7 @@ namespace Winnic
             _hotkeyManager.Unregister();
             try
             {
-                _hotkeyManager.Register(cfg.Modifiers, cfg.Key, OnHotkeyPressed);
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.Key, OnHotkeyPressed);
             }
             catch (Exception ex)
             {
@@ -59,7 +57,7 @@ namespace Winnic
             }
             try
             {
-                _hotkeyManager.Register(cfg.MaximizeModifiers, cfg.MaximizeKey, OnMaximizeHotkey);
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.MaximizeKey, OnMaximizeHotkey);
             }
             catch (Exception ex)
             {
@@ -67,11 +65,27 @@ namespace Winnic
             }
             try
             {
-                _hotkeyManager.Register(cfg.RestoreModifiers, cfg.RestoreKey, OnRestoreHotkey);
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.RestoreKey, OnRestoreHotkey);
             }
             catch (Exception ex)
             {
                 ShowBalloon($"Не удалось зарегистрировать хоткей восстановления: {ex.Message}");
+            }
+            try
+            {
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.LeftKey, OnSnapLeftHotkey);
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Не удалось зарегистрировать хоткей левой половины: {ex.Message}");
+            }
+            try
+            {
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.RightKey, OnSnapRightHotkey);
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Не удалось зарегистрировать хоткей правой половины: {ex.Message}");
             }
         }
 
@@ -87,16 +101,7 @@ namespace Winnic
             }
         }
 
-        private void OnCenterNow(object? sender, EventArgs e)
-        {
-            OnHotkeyPressed();
-        }
-
-        private void OnMaximizeNow(object? sender, EventArgs e)
-        {
-            OnMaximizeHotkey();
-        }
-
+        
         private void OnMaximizeHotkey()
         {
             try
@@ -110,16 +115,35 @@ namespace Winnic
             }
         }
 
-        private void OnRestoreNow(object? sender, EventArgs e)
-        {
-            OnRestoreHotkey();
-        }
-
         private void OnRestoreHotkey()
         {
             try
             {
                 _windowCenterService.RestoreLastPlacement();
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Ошибка: {ex.Message}");
+            }
+        }
+
+        private void OnSnapLeftHotkey()
+        {
+            try
+            {
+                _windowCenterService.SnapForegroundWindowLeftHalf();
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Ошибка: {ex.Message}");
+            }
+        }
+
+        private void OnSnapRightHotkey()
+        {
+            try
+            {
+                _windowCenterService.SnapForegroundWindowRightHalf();
             }
             catch (Exception ex)
             {
@@ -141,9 +165,6 @@ namespace Winnic
 
         private void OnExit(object? sender, EventArgs e)
         {
-            _hotkeyManager.Unregister();
-            _notifyIcon.Visible = false;
-            _notifyIcon.Dispose();
             ExitThread();
         }
 
@@ -158,6 +179,20 @@ namespace Winnic
             _notifyIcon.BalloonTipTitle = "Winnic";
             _notifyIcon.BalloonTipText = text;
             _notifyIcon.ShowBalloonTip(2000);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                try { _hotkeyManager.Unregister(); } catch { }
+                _notifyIcon.Visible = false;
+                _notifyIcon.Dispose();
+                _menu.Dispose();
+                _hotkeyManager.Dispose();
+                _icon.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

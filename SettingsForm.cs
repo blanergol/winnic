@@ -1,7 +1,3 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
-
 namespace Winnic
 {
     internal sealed class SettingsForm : Form
@@ -12,21 +8,14 @@ namespace Winnic
         private readonly CheckBox _chkWin = new CheckBox { Text = "Win" };
         private readonly ComboBox _cmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
 
-        private readonly CheckBox _mChkCtrl = new CheckBox { Text = "Ctrl" };
-        private readonly CheckBox _mChkAlt = new CheckBox { Text = "Alt", Checked = true, Enabled = false };
-        private readonly CheckBox _mChkShift = new CheckBox { Text = "Shift" };
-        private readonly CheckBox _mChkWin = new CheckBox { Text = "Win" };
         private readonly ComboBox _mCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly ComboBox _lCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly ComboBox _rHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
 
         private readonly CheckBox _chkAutostart = new CheckBox { Text = "Автозапуск при старте Windows", AutoSize = true };
         private readonly Button _btnOk = new Button { Text = "OK", DialogResult = DialogResult.OK, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(12, 6, 12, 6) };
         private readonly Button _btnCancel = new Button { Text = "Отмена", DialogResult = DialogResult.Cancel, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(12, 6, 12, 6) };
 
-        // Третий хоткей: восстановление
-        private readonly CheckBox _rChkCtrl = new CheckBox { Text = "Ctrl" };
-        private readonly CheckBox _rChkAlt = new CheckBox { Text = "Alt", Checked = true, Enabled = false };
-        private readonly CheckBox _rChkShift = new CheckBox { Text = "Shift" };
-        private readonly CheckBox _rChkWin = new CheckBox { Text = "Win" };
         private readonly ComboBox _rCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
 
         public AppSettings CurrentSettings { get; private set; }
@@ -40,30 +29,37 @@ namespace Winnic
             MinimizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(540, 480);
-            MinimumSize = new Size(540, 360);
+            ClientSize = new Size(540, 540);
+            MinimumSize = new Size(540, 540);
 
             var modsPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
+            var modsLabel = new Label { Text = "Общие модификаторы:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            modsPanel.Controls.Add(modsLabel);
+            modsPanel.SetFlowBreak(modsLabel, true);
             modsPanel.Controls.AddRange(new Control[] { _chkCtrl, _chkAlt, _chkShift, _chkWin });
 
             var keyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            keyPanel.Controls.Add(new Label { Text = "Центрирование — клавиша:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            keyPanel.Controls.Add(new Label { Text = "Центрирование:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
             _cmbKey.Width = 200;
             keyPanel.Controls.Add(_cmbKey);
 
-            var mModsPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            mModsPanel.Controls.AddRange(new Control[] { _mChkCtrl, _mChkAlt, _mChkShift, _mChkWin });
-
             var mKeyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            mKeyPanel.Controls.Add(new Label { Text = "Разворот — клавиша:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            mKeyPanel.Controls.Add(new Label { Text = "На весь экран:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
             _mCmbKey.Width = 200;
             mKeyPanel.Controls.Add(_mCmbKey);
 
-            var rModsPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            rModsPanel.Controls.AddRange(new Control[] { _rChkCtrl, _rChkAlt, _rChkShift, _rChkWin });
+            var lKeyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
+            lKeyPanel.Controls.Add(new Label { Text = "Левая половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            _lCmbKey.Width = 200;
+            lKeyPanel.Controls.Add(_lCmbKey);
+
+            var rHalfKeyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
+            rHalfKeyPanel.Controls.Add(new Label { Text = "Правая половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            _rHalfCmbKey.Width = 200;
+            rHalfKeyPanel.Controls.Add(_rHalfCmbKey);
 
             var rKeyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            rKeyPanel.Controls.Add(new Label { Text = "Восстановление — клавиша:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            rKeyPanel.Controls.Add(new Label { Text = "Восстановление:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
             _rCmbKey.Width = 200;
             rKeyPanel.Controls.Add(_rCmbKey);
 
@@ -76,9 +72,9 @@ namespace Winnic
             var content = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
             content.Controls.Add(autostartPanel);
             content.Controls.Add(rKeyPanel);
-            content.Controls.Add(rModsPanel);
             content.Controls.Add(mKeyPanel);
-            content.Controls.Add(mModsPanel);
+            content.Controls.Add(lKeyPanel);
+            content.Controls.Add(rHalfKeyPanel);
             content.Controls.Add(keyPanel);
             content.Controls.Add(modsPanel);
 
@@ -92,8 +88,14 @@ namespace Winnic
 
             _cmbKey.FormattingEnabled = true;
             _mCmbKey.FormattingEnabled = true;
+            _lCmbKey.FormattingEnabled = true;
+            _rHalfCmbKey.FormattingEnabled = true;
+            _rCmbKey.FormattingEnabled = true;
             _cmbKey.Format += FormatKeyName;
             _mCmbKey.Format += FormatKeyName;
+            _lCmbKey.Format += FormatKeyName;
+            _rHalfCmbKey.Format += FormatKeyName;
+            _rCmbKey.Format += FormatKeyName;
         }
 
         private void FormatKeyName(object? sender, ListControlConvertEventArgs e)
@@ -106,47 +108,52 @@ namespace Winnic
 
         private void OnLoad(object? sender, EventArgs e)
         {
-            // Alt обязателен и фиксирован
-            _chkAlt.Checked = true; _chkAlt.Enabled = false;
-            _mChkAlt.Checked = true; _mChkAlt.Enabled = false;
+            // Заполняем списки доступных основных клавиш
             foreach (Keys k in Enum.GetValues(typeof(Keys)))
             {
                 if ((int)k >= (int)Keys.A && (int)k <= (int)Keys.Z || (int)k >= (int)Keys.F1 && (int)k <= (int)Keys.F24)
                 {
                     _cmbKey.Items.Add(k);
                     _mCmbKey.Items.Add(k);
+                    _lCmbKey.Items.Add(k);
+                    _rHalfCmbKey.Items.Add(k);
                     _rCmbKey.Items.Add(k);
                 }
             }
             // Добавим популярные дополнительные клавиши
             if (!_cmbKey.Items.Contains(Keys.Enter)) { _cmbKey.Items.Add(Keys.Enter); }
             if (!_mCmbKey.Items.Contains(Keys.Enter)) { _mCmbKey.Items.Add(Keys.Enter); }
+            if (!_lCmbKey.Items.Contains(Keys.Left)) { _lCmbKey.Items.Add(Keys.Left); }
+            if (!_rHalfCmbKey.Items.Contains(Keys.Right)) { _rHalfCmbKey.Items.Add(Keys.Right); }
             if (!_rCmbKey.Items.Contains(Keys.Back)) { _rCmbKey.Items.Add(Keys.Back); }
 
-            _chkCtrl.Checked = CurrentSettings.Modifiers.HasFlag(HotkeyModifiers.Control);
-            _chkAlt.Checked = CurrentSettings.Modifiers.HasFlag(HotkeyModifiers.Alt);
-            _chkShift.Checked = CurrentSettings.Modifiers.HasFlag(HotkeyModifiers.Shift);
-            _chkWin.Checked = CurrentSettings.Modifiers.HasFlag(HotkeyModifiers.Win);
+            _chkCtrl.Checked = CurrentSettings.CommonModifiers.HasFlag(HotkeyModifiers.Control);
+            // Alt обязателен: принудительно включаем и делаем недоступным для снятия
+            _chkAlt.Checked = true;
+            _chkShift.Checked = CurrentSettings.CommonModifiers.HasFlag(HotkeyModifiers.Shift);
+            _chkWin.Checked = CurrentSettings.CommonModifiers.HasFlag(HotkeyModifiers.Win);
             if (!_cmbKey.Items.Contains(CurrentSettings.Key)) _cmbKey.Items.Add(CurrentSettings.Key);
             _cmbKey.SelectedItem = CurrentSettings.Key;
             if (_cmbKey.SelectedIndex < 0 && _cmbKey.Items.Count > 0)
                 _cmbKey.SelectedIndex = 0;
 
-            _mChkCtrl.Checked = CurrentSettings.MaximizeModifiers.HasFlag(HotkeyModifiers.Control);
-            _mChkAlt.Checked = CurrentSettings.MaximizeModifiers.HasFlag(HotkeyModifiers.Alt);
-            _mChkShift.Checked = CurrentSettings.MaximizeModifiers.HasFlag(HotkeyModifiers.Shift);
-            _mChkWin.Checked = CurrentSettings.MaximizeModifiers.HasFlag(HotkeyModifiers.Win);
             if (!_mCmbKey.Items.Contains(CurrentSettings.MaximizeKey)) _mCmbKey.Items.Add(CurrentSettings.MaximizeKey);
             _mCmbKey.SelectedItem = CurrentSettings.MaximizeKey;
             if (_mCmbKey.SelectedIndex < 0 && _mCmbKey.Items.Count > 0)
                 _mCmbKey.SelectedIndex = 0;
 
+            if (!_lCmbKey.Items.Contains(CurrentSettings.LeftKey)) _lCmbKey.Items.Add(CurrentSettings.LeftKey);
+            _lCmbKey.SelectedItem = CurrentSettings.LeftKey;
+            if (_lCmbKey.SelectedIndex < 0 && _lCmbKey.Items.Count > 0)
+                _lCmbKey.SelectedIndex = 0;
+
+            if (!_rHalfCmbKey.Items.Contains(CurrentSettings.RightKey)) _rHalfCmbKey.Items.Add(CurrentSettings.RightKey);
+            _rHalfCmbKey.SelectedItem = CurrentSettings.RightKey;
+            if (_rHalfCmbKey.SelectedIndex < 0 && _rHalfCmbKey.Items.Count > 0)
+                _rHalfCmbKey.SelectedIndex = 0;
+
             _chkAutostart.Checked = CurrentSettings.AutoStart;
 
-            // Восстановление
-            _rChkCtrl.Checked = CurrentSettings.RestoreModifiers.HasFlag(HotkeyModifiers.Control);
-            _rChkShift.Checked = CurrentSettings.RestoreModifiers.HasFlag(HotkeyModifiers.Shift);
-            _rChkWin.Checked = CurrentSettings.RestoreModifiers.HasFlag(HotkeyModifiers.Win);
             if (!_rCmbKey.Items.Contains(CurrentSettings.RestoreKey)) _rCmbKey.Items.Add(CurrentSettings.RestoreKey);
             _rCmbKey.SelectedItem = CurrentSettings.RestoreKey;
             if (_rCmbKey.SelectedIndex < 0 && _rCmbKey.Items.Count > 0)
@@ -155,34 +162,26 @@ namespace Winnic
 
         private void OnOk(object? sender, EventArgs e)
         {
-            var mods = HotkeyModifiers.None;
-            if (_chkCtrl.Checked) mods |= HotkeyModifiers.Control;
-            if (_chkAlt.Checked) mods |= HotkeyModifiers.Alt;
-            if (_chkShift.Checked) mods |= HotkeyModifiers.Shift;
-            if (_chkWin.Checked) mods |= HotkeyModifiers.Win;
+            var commonMods = HotkeyModifiers.None;
+            if (_chkCtrl.Checked) commonMods |= HotkeyModifiers.Control;
+            // Alt обязателен
+            commonMods |= HotkeyModifiers.Alt;
+            if (_chkShift.Checked) commonMods |= HotkeyModifiers.Shift;
+            if (_chkWin.Checked) commonMods |= HotkeyModifiers.Win;
 
             var key = _cmbKey.SelectedItem is Keys k ? k : Keys.C;
-
-            var mmods = HotkeyModifiers.None;
-            if (_mChkCtrl.Checked) mmods |= HotkeyModifiers.Control;
-            if (_mChkAlt.Checked) mmods |= HotkeyModifiers.Alt;
-            if (_mChkShift.Checked) mmods |= HotkeyModifiers.Shift;
-            if (_mChkWin.Checked) mmods |= HotkeyModifiers.Win;
             var mkey = _mCmbKey.SelectedItem is Keys mk ? mk : Keys.Enter;
-
-            var rmods = HotkeyModifiers.Alt; // Alt обязателен
-            if (_rChkCtrl.Checked) rmods |= HotkeyModifiers.Control;
-            if (_rChkShift.Checked) rmods |= HotkeyModifiers.Shift;
-            if (_rChkWin.Checked) rmods |= HotkeyModifiers.Win;
+            var leftKey = _lCmbKey.SelectedItem is Keys lk ? lk : Keys.Left;
+            var rightKey = _rHalfCmbKey.SelectedItem is Keys rk2 ? rk2 : Keys.Right;
             var rkey = _rCmbKey.SelectedItem is Keys rk ? rk : Keys.Back;
 
             CurrentSettings = new AppSettings
             {
-                Modifiers = mods,
+                CommonModifiers = commonMods,
                 Key = key,
-                MaximizeModifiers = mmods,
                 MaximizeKey = mkey,
-                RestoreModifiers = rmods,
+                LeftKey = leftKey,
+                RightKey = rightKey,
                 RestoreKey = rkey,
                 AutoStart = _chkAutostart.Checked
             };

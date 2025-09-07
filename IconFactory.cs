@@ -1,7 +1,4 @@
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
 
 namespace Winnic
 {
@@ -24,11 +21,25 @@ namespace Winnic
                 g.DrawEllipse(Pens.White, 10, 10, 12, 12);
             }
 
-            using var ms = new MemoryStream();
-            bmp.Save(ms, ImageFormat.Png);
-            using var iconBmp = new Bitmap(bmp);
-            return Icon.FromHandle(iconBmp.GetHicon());
+            // Создаём иконку и сразу же клонируем её, чтобы освободить исходный дескриптор
+            var hIcon = bmp.GetHicon();
+            try
+            {
+                using var tmpIcon = Icon.FromHandle(hIcon);
+                return (Icon)tmpIcon.Clone();
+            }
+            finally
+            {
+                // Уничтожаем дескриптор, чтобы не было утечки
+                NativeMethods.DestroyIcon(hIcon);
+            }
         }
+    }
+
+    internal static class NativeMethods
+    {
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        internal static extern bool DestroyIcon(IntPtr hIcon);
     }
 }
 

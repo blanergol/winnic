@@ -1,8 +1,5 @@
-using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Reflection;
-using System.Windows.Forms;
 
 namespace Winnic
 {
@@ -23,35 +20,43 @@ namespace Winnic
             var company = GetAttribute<AssemblyCompanyAttribute, string?>(a => a.Company) ?? "";
             var copyright = GetAttribute<AssemblyCopyrightAttribute, string?>(a => a.Copyright)
                             ?? $"© {DateTime.Now:yyyy} {company}";
-            var description = GetAttribute<AssemblyDescriptionAttribute, string?>(a => a.Description) ?? "Утилита для центрирования и управления активным окном Windows.";
+            var description = GetAttribute<AssemblyDescriptionAttribute, string?>(a => a.Description) ?? "Утилита для управления расположением активного окна в Windows.";
 
-            var title = new Label { Text = productName, Font = new Font(Font, FontStyle.Bold), AutoSize = true, Padding = new Padding(0, 8, 0, 4) };
-            var ver = new Label { Text = $"Версия: {version}", AutoSize = true };
-            var dev = new Label { Text = string.IsNullOrWhiteSpace(company) ? "Разработчик: —" : $"Разработчик: {company}", AutoSize = true };
-            var copy = new Label { Text = copyright, AutoSize = true };
-            var desc = new Label { Text = description, AutoSize = true, MaximumSize = new Size(420, 0) };
+            var title = new Label { Text = productName, Font = new Font(Font, FontStyle.Bold), AutoSize = true, Padding = new Padding(0, 8, 0, 4), TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
+            var ver = new Label { Text = $"Версия: {version}", AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
+            var dev = new Label { Text = string.IsNullOrWhiteSpace(company) ? "Разработчик: —" : $"Разработчик: blanergol", AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
+            var copy = new Label { Text = copyright, AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
+            var desc = new Label { Text = description, AutoSize = true, MaximumSize = new Size(420, 0), TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
 
             var ok = new Button { Text = "OK", DialogResult = DialogResult.OK, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(12, 6, 12, 6) };
 
-            var content = new FlowLayoutPanel
+            var layout = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                FlowDirection = FlowDirection.TopDown,
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 1,
                 Padding = new Padding(16)
             };
-            content.Controls.Add(title);
-            content.Controls.Add(ver);
-            content.Controls.Add(dev);
-            content.Controls.Add(copy);
-            content.Controls.Add(new Label { Text = "", AutoSize = true, Padding = new Padding(0, 6, 0, 0) });
-            content.Controls.Add(desc);
+            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // title
+            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // desc
+            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); // spacer
+            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // version
+            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // developer
+            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // copyright
+
+            var spacer = new Panel { Dock = DockStyle.Fill };
+
+            layout.Controls.Add(title, 0, 0);
+            layout.Controls.Add(desc, 0, 1);
+            layout.Controls.Add(spacer, 0, 2);
+            layout.Controls.Add(ver, 0, 3);
+            layout.Controls.Add(dev, 0, 4);
+            layout.Controls.Add(copy, 0, 5);
 
             var buttons = new FlowLayoutPanel { Dock = DockStyle.Bottom, FlowDirection = FlowDirection.RightToLeft, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(16) };
             buttons.Controls.Add(ok);
 
-            Controls.Add(content);
+            Controls.Add(layout);
             Controls.Add(buttons);
 
             AcceptButton = ok;

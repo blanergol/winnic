@@ -16,16 +16,16 @@
 
 ## Архитектура и структура
 
-- `Program.cs` — точка входа, запускает контекст трея.
-- `TrayApplicationContext.cs` — логика иконки в трее, контекстное меню, обработка хоткеев, применение настроек и автозапуска.
-- `WindowService.cs` (`WindowCenterService`) — операции с активным окном: центрирование, разворот, сохранение и восстановление положения (WinAPI: `user32.dll`).
-- `HotkeyManager.cs` — регистрация/снятие глобальных горячих клавиш (WinAPI `RegisterHotKey`), диспетчеризация колбэков.
-- `SettingsForm.cs` — окно настроек: выбор модификаторов и клавиш для трёх действий, флаг автозапуска.
-- `SettingsService.cs` — чтение/запись настроек в `%LocalAppData%/Winnic/settings.json` (System.Text.Json).
-- `Settings.cs` — модель настроек `AppSettings` (дублируется с определением в `SettingsService.cs`, хранит хоткеи и флаг автозапуска).
-- `AutoStartService.cs` — включение/отключение автозапуска через реестр `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
-- `IconFactory.cs` — генерация простой иконки приложения на лету.
-- `Winnic.csproj` — проект .NET 9 Windows Forms, `app.manifest` — манифест приложения.
+- `Program.cs` - точка входа, запускает контекст трея.
+- `TrayApplicationContext.cs` - логика иконки в трее, контекстное меню, обработка хоткеев, применение настроек и автозапуска.
+- `WindowService.cs` (`WindowCenterService`) - операции с активным окном: центрирование, разворот, сохранение и восстановление положения (WinAPI: `user32.dll`).
+- `HotkeyManager.cs` - регистрация/снятие глобальных горячих клавиш (WinAPI `RegisterHotKey`), диспетчеризация колбэков.
+- `SettingsForm.cs` - окно настроек: выбор модификаторов и клавиш для трёх действий, флаг автозапуска.
+- `SettingsService.cs` - чтение/запись настроек в `%LocalAppData%/Winnic/settings.json` (System.Text.Json).
+- `Settings.cs` - модель настроек `AppSettings` (хранит хоткеи и флаг автозапуска).
+- `AutoStartService.cs` - включение/отключение автозапуска через реестр `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
+- `IconFactory.cs` - генерация простой иконки приложения на лету.
+- `Winnic.csproj` - проект .NET 9 Windows Forms, `app.manifest` - манифест приложения.
 
 Особенности:
 - Работает только на Windows (используются WinAPI и Windows Forms).
@@ -37,7 +37,7 @@
 Среда и SDK:
 - **.NET SDK 9.0** (Windows) с поддержкой `net9.0-windows` и Windows Forms.
 - ОС **Windows 10/11**. На WSL/ Linux приложение не запускается (только сборка в кросс-режиме)
-  не поддерживается, т.к. таргет — WinExe с WinAPI.
+  не поддерживается, т.к. таргет - WinExe с WinAPI.
 
 NuGet-пакеты: внешние пакеты не используются; применяется стандартная библиотека .NET и P/Invoke к `user32.dll`.
 
