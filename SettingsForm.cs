@@ -11,6 +11,8 @@ namespace Winnic
         private readonly ComboBox _mCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
         private readonly ComboBox _lCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
         private readonly ComboBox _rHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly ComboBox _tHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly ComboBox _bHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
 
         private readonly CheckBox _chkAutostart = new CheckBox { Text = "Автозапуск при старте Windows", AutoSize = true };
         private readonly Button _btnOk = new Button { Text = "OK", DialogResult = DialogResult.OK, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(12, 6, 12, 6) };
@@ -38,30 +40,60 @@ namespace Winnic
             modsPanel.SetFlowBreak(modsLabel, true);
             modsPanel.Controls.AddRange(new Control[] { _chkCtrl, _chkAlt, _chkShift, _chkWin });
 
-            var keyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            keyPanel.Controls.Add(new Label { Text = "Центрирование:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            var keysTable = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Padding = new Padding(10),
+                ColumnCount = 2
+            };
+            keysTable.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            keysTable.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220));
+
+            int rowIndex = 0;
+
+            var lblCenter = new Label { Text = "Центрирование:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblCenter, 0, rowIndex);
             _cmbKey.Width = 200;
-            keyPanel.Controls.Add(_cmbKey);
+            _cmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_cmbKey, 1, rowIndex++);
 
-            var mKeyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            mKeyPanel.Controls.Add(new Label { Text = "На весь экран:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            var lblMax = new Label { Text = "На весь экран:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblMax, 0, rowIndex);
             _mCmbKey.Width = 200;
-            mKeyPanel.Controls.Add(_mCmbKey);
+            _mCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_mCmbKey, 1, rowIndex++);
 
-            var lKeyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            lKeyPanel.Controls.Add(new Label { Text = "Левая половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            var lblLeft = new Label { Text = "Левая половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblLeft, 0, rowIndex);
             _lCmbKey.Width = 200;
-            lKeyPanel.Controls.Add(_lCmbKey);
+            _lCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_lCmbKey, 1, rowIndex++);
 
-            var rHalfKeyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            rHalfKeyPanel.Controls.Add(new Label { Text = "Правая половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            var lblRightHalf = new Label { Text = "Правая половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblRightHalf, 0, rowIndex);
             _rHalfCmbKey.Width = 200;
-            rHalfKeyPanel.Controls.Add(_rHalfCmbKey);
+            _rHalfCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_rHalfCmbKey, 1, rowIndex++);
 
-            var rKeyPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            rKeyPanel.Controls.Add(new Label { Text = "Восстановление:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) });
+            var lblTopHalf = new Label { Text = "Верхняя половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblTopHalf, 0, rowIndex);
+            _tHalfCmbKey.Width = 200;
+            _tHalfCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_tHalfCmbKey, 1, rowIndex++);
+
+            var lblBottomHalf = new Label { Text = "Нижняя половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblBottomHalf, 0, rowIndex);
+            _bHalfCmbKey.Width = 200;
+            _bHalfCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_bHalfCmbKey, 1, rowIndex++);
+
+            var lblRestore = new Label { Text = "Восстановление:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblRestore, 0, rowIndex);
             _rCmbKey.Width = 200;
-            rKeyPanel.Controls.Add(_rCmbKey);
+            _rCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_rCmbKey, 1, rowIndex++);
 
             var autostartPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10, 10, 10, 12) };
             autostartPanel.Controls.Add(_chkAutostart);
@@ -70,12 +102,9 @@ namespace Winnic
             buttons.Controls.AddRange(new Control[] { _btnOk, _btnCancel });
 
             var content = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
+            // Порядок добавления важен для DockStyle.Top: последний добавленный будет сверху
             content.Controls.Add(autostartPanel);
-            content.Controls.Add(rKeyPanel);
-            content.Controls.Add(mKeyPanel);
-            content.Controls.Add(lKeyPanel);
-            content.Controls.Add(rHalfKeyPanel);
-            content.Controls.Add(keyPanel);
+            content.Controls.Add(keysTable);
             content.Controls.Add(modsPanel);
 
             Controls.Add(content);
@@ -90,11 +119,15 @@ namespace Winnic
             _mCmbKey.FormattingEnabled = true;
             _lCmbKey.FormattingEnabled = true;
             _rHalfCmbKey.FormattingEnabled = true;
+            _tHalfCmbKey.FormattingEnabled = true;
+            _bHalfCmbKey.FormattingEnabled = true;
             _rCmbKey.FormattingEnabled = true;
             _cmbKey.Format += FormatKeyName;
             _mCmbKey.Format += FormatKeyName;
             _lCmbKey.Format += FormatKeyName;
             _rHalfCmbKey.Format += FormatKeyName;
+            _tHalfCmbKey.Format += FormatKeyName;
+            _bHalfCmbKey.Format += FormatKeyName;
             _rCmbKey.Format += FormatKeyName;
         }
 
@@ -117,6 +150,8 @@ namespace Winnic
                     _mCmbKey.Items.Add(k);
                     _lCmbKey.Items.Add(k);
                     _rHalfCmbKey.Items.Add(k);
+                    _tHalfCmbKey.Items.Add(k);
+                    _bHalfCmbKey.Items.Add(k);
                     _rCmbKey.Items.Add(k);
                 }
             }
@@ -125,6 +160,8 @@ namespace Winnic
             if (!_mCmbKey.Items.Contains(Keys.Enter)) { _mCmbKey.Items.Add(Keys.Enter); }
             if (!_lCmbKey.Items.Contains(Keys.Left)) { _lCmbKey.Items.Add(Keys.Left); }
             if (!_rHalfCmbKey.Items.Contains(Keys.Right)) { _rHalfCmbKey.Items.Add(Keys.Right); }
+            if (!_tHalfCmbKey.Items.Contains(Keys.Up)) { _tHalfCmbKey.Items.Add(Keys.Up); }
+            if (!_bHalfCmbKey.Items.Contains(Keys.Down)) { _bHalfCmbKey.Items.Add(Keys.Down); }
             if (!_rCmbKey.Items.Contains(Keys.Back)) { _rCmbKey.Items.Add(Keys.Back); }
 
             _chkCtrl.Checked = CurrentSettings.CommonModifiers.HasFlag(HotkeyModifiers.Control);
@@ -152,6 +189,16 @@ namespace Winnic
             if (_rHalfCmbKey.SelectedIndex < 0 && _rHalfCmbKey.Items.Count > 0)
                 _rHalfCmbKey.SelectedIndex = 0;
 
+            if (!_tHalfCmbKey.Items.Contains(CurrentSettings.TopKey)) _tHalfCmbKey.Items.Add(CurrentSettings.TopKey);
+            _tHalfCmbKey.SelectedItem = CurrentSettings.TopKey;
+            if (_tHalfCmbKey.SelectedIndex < 0 && _tHalfCmbKey.Items.Count > 0)
+                _tHalfCmbKey.SelectedIndex = 0;
+
+            if (!_bHalfCmbKey.Items.Contains(CurrentSettings.BottomKey)) _bHalfCmbKey.Items.Add(CurrentSettings.BottomKey);
+            _bHalfCmbKey.SelectedItem = CurrentSettings.BottomKey;
+            if (_bHalfCmbKey.SelectedIndex < 0 && _bHalfCmbKey.Items.Count > 0)
+                _bHalfCmbKey.SelectedIndex = 0;
+
             _chkAutostart.Checked = CurrentSettings.AutoStart;
 
             if (!_rCmbKey.Items.Contains(CurrentSettings.RestoreKey)) _rCmbKey.Items.Add(CurrentSettings.RestoreKey);
@@ -173,6 +220,8 @@ namespace Winnic
             var mkey = _mCmbKey.SelectedItem is Keys mk ? mk : Keys.Enter;
             var leftKey = _lCmbKey.SelectedItem is Keys lk ? lk : Keys.Left;
             var rightKey = _rHalfCmbKey.SelectedItem is Keys rk2 ? rk2 : Keys.Right;
+            var topKey = _tHalfCmbKey.SelectedItem is Keys tk ? tk : Keys.Up;
+            var bottomKey = _bHalfCmbKey.SelectedItem is Keys bk ? bk : Keys.Down;
             var rkey = _rCmbKey.SelectedItem is Keys rk ? rk : Keys.Back;
 
             CurrentSettings = new AppSettings
@@ -182,6 +231,8 @@ namespace Winnic
                 MaximizeKey = mkey,
                 LeftKey = leftKey,
                 RightKey = rightKey,
+                TopKey = topKey,
+                BottomKey = bottomKey,
                 RestoreKey = rkey,
                 AutoStart = _chkAutostart.Checked
             };

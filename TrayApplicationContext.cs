@@ -87,6 +87,22 @@ namespace Winnic
             {
                 ShowBalloon($"Не удалось зарегистрировать хоткей правой половины: {ex.Message}");
             }
+            try
+            {
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.TopKey, OnSnapTopHotkey);
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Не удалось зарегистрировать хоткей верхней половины: {ex.Message}");
+            }
+            try
+            {
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.BottomKey, OnSnapBottomHotkey);
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Не удалось зарегистрировать хоткей нижней половины: {ex.Message}");
+            }
         }
 
         private void OnHotkeyPressed()
@@ -144,6 +160,30 @@ namespace Winnic
             try
             {
                 _windowCenterService.SnapForegroundWindowRightHalf();
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Ошибка: {ex.Message}");
+            }
+        }
+
+        private void OnSnapTopHotkey()
+        {
+            try
+            {
+                _windowCenterService.SnapForegroundWindowTopHalf();
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Ошибка: {ex.Message}");
+            }
+        }
+
+        private void OnSnapBottomHotkey()
+        {
+            try
+            {
+                _windowCenterService.SnapForegroundWindowBottomHalf();
             }
             catch (Exception ex)
             {

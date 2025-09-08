@@ -135,6 +135,70 @@ namespace Winnic
                 throw new InvalidOperationException("Не удалось переместить окно");
         }
 
+        public void SnapForegroundWindowTopHalf()
+        {
+            var hwnd = GetForegroundWindow();
+            if (hwnd == IntPtr.Zero)
+                throw new InvalidOperationException("Нет активного окна");
+
+            if (!GetWindowRect(hwnd, out var rect))
+                throw new InvalidOperationException("Не удалось получить размер окна");
+
+            var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+            var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
+            bool gotMonitor = hmon != IntPtr.Zero && GetMonitorInfo(hmon, ref mi);
+
+            if (!gotMonitor)
+            {
+                var screen = Screen.FromHandle(hwnd);
+                var wa = screen.WorkingArea;
+                mi.rcWork = new RECT { Left = wa.Left, Top = wa.Top, Right = wa.Right, Bottom = wa.Bottom };
+            }
+
+            int workWidth = mi.rcWork.Right - mi.rcWork.Left;
+            int workHeight = mi.rcWork.Bottom - mi.rcWork.Top;
+            int targetWidth = workWidth;
+            int targetHeight = workHeight / 2;
+            int targetX = mi.rcWork.Left;
+            int targetY = mi.rcWork.Top;
+
+            ShowWindow(hwnd, SW_SHOWNORMAL);
+            if (!MoveWindow(hwnd, targetX, targetY, targetWidth, targetHeight, true))
+                throw new InvalidOperationException("Не удалось переместить окно");
+        }
+
+        public void SnapForegroundWindowBottomHalf()
+        {
+            var hwnd = GetForegroundWindow();
+            if (hwnd == IntPtr.Zero)
+                throw new InvalidOperationException("Нет активного окна");
+
+            if (!GetWindowRect(hwnd, out var rect))
+                throw new InvalidOperationException("Не удалось получить размер окна");
+
+            var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+            var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
+            bool gotMonitor = hmon != IntPtr.Zero && GetMonitorInfo(hmon, ref mi);
+
+            if (!gotMonitor)
+            {
+                var screen = Screen.FromHandle(hwnd);
+                var wa = screen.WorkingArea;
+                mi.rcWork = new RECT { Left = wa.Left, Top = wa.Top, Right = wa.Right, Bottom = wa.Bottom };
+            }
+
+            int workWidth = mi.rcWork.Right - mi.rcWork.Left;
+            int workHeight = mi.rcWork.Bottom - mi.rcWork.Top;
+            int targetWidth = workWidth;
+            int targetHeight = workHeight / 2;
+            int targetX = mi.rcWork.Left;
+            int targetY = mi.rcWork.Top + workHeight - targetHeight;
+
+            ShowWindow(hwnd, SW_SHOWNORMAL);
+            if (!MoveWindow(hwnd, targetX, targetY, targetWidth, targetHeight, true))
+                throw new InvalidOperationException("Не удалось переместить окно");
+        }
+
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 

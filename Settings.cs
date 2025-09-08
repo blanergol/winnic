@@ -20,6 +20,11 @@ namespace Winnic
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Keys RightKey { get; set; } = Keys.Right; // Правая половина — клавиша
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Keys TopKey { get; set; } = Keys.Up; // Верхняя половина — клавиша
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Keys BottomKey { get; set; } = Keys.Down; // Нижняя половина — клавиша
+
         // Автозапуск
         public bool AutoStart { get; set; } = false;
     }
