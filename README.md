@@ -17,7 +17,10 @@ Small Windows application (WinForms, .NET 9) that lives in the system tray and h
 - Snap to right half: default `Ctrl + Alt + Right`.
 - Snap to top half: default `Ctrl + Alt + Up`.
 - Snap to bottom half: default `Ctrl + Alt + Down`.
-- Tray icon with menu: "Settings…" and "Exit".
+- Minimize active window: default `Ctrl + Alt + W`.
+- Restore last minimized window: default `Ctrl + Alt + E`.
+- Close active window: default `Ctrl + Alt + Q`.
+- Tray icon with menu: "Settings" and "Exit".
 - Autostart on sign-in (toggle in settings).
 
 ## Architecture and structure
@@ -70,10 +73,13 @@ The executable will be in `bin/Release/net9.0-windows/win-x64/publish/`.
 
 ## Configure hotkeys
 
-Open the tray icon menu → "Settings…" and set hotkeys for:
+Open the tray icon menu → "Settings" and set hotkeys for:
 - Center window
 - Maximize window
 - Restore previous position
+- Minimize active window
+- Restore last minimized window
+- Close window
 - Snap to left/right halves
 - Snap to top/bottom halves
 

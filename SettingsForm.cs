@@ -13,6 +13,9 @@ namespace Winnic
         private readonly ComboBox _rHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
         private readonly ComboBox _tHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
         private readonly ComboBox _bHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly ComboBox _minCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly ComboBox _restMinCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly ComboBox _closeCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
 
         private readonly CheckBox _chkAutostart = new CheckBox { Text = "Launch at Windows startup", AutoSize = true };
         private readonly Button _btnOk = new Button { Text = "OK", DialogResult = DialogResult.OK, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(12, 6, 12, 6) };
@@ -31,8 +34,8 @@ namespace Winnic
             MinimizeBox = false;
             StartPosition = FormStartPosition.CenterScreen;
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(540, 540);
-            MinimumSize = new Size(540, 540);
+            ClientSize = new Size(540, 630);
+            MinimumSize = new Size(540, 630);
 
             var modsPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
             var modsLabel = new Label { Text = "Common modifiers:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
@@ -95,6 +98,24 @@ namespace Winnic
             _rCmbKey.Anchor = AnchorStyles.Left;
             keysTable.Controls.Add(_rCmbKey, 1, rowIndex++);
 
+            var lblMin = new Label { Text = "Minimize:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblMin, 0, rowIndex);
+            _minCmbKey.Width = 200;
+            _minCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_minCmbKey, 1, rowIndex++);
+
+            var lblRestMin = new Label { Text = "Restore minimized:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblRestMin, 0, rowIndex);
+            _restMinCmbKey.Width = 200;
+            _restMinCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_restMinCmbKey, 1, rowIndex++);
+
+            var lblClose = new Label { Text = "Close window:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            keysTable.Controls.Add(lblClose, 0, rowIndex);
+            _closeCmbKey.Width = 200;
+            _closeCmbKey.Anchor = AnchorStyles.Left;
+            keysTable.Controls.Add(_closeCmbKey, 1, rowIndex++);
+
             var autostartPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10, 10, 10, 12) };
             autostartPanel.Controls.Add(_chkAutostart);
 
@@ -121,6 +142,9 @@ namespace Winnic
             _rHalfCmbKey.FormattingEnabled = true;
             _tHalfCmbKey.FormattingEnabled = true;
             _bHalfCmbKey.FormattingEnabled = true;
+            _minCmbKey.FormattingEnabled = true;
+            _restMinCmbKey.FormattingEnabled = true;
+            _closeCmbKey.FormattingEnabled = true;
             _rCmbKey.FormattingEnabled = true;
             _cmbKey.Format += FormatKeyName;
             _mCmbKey.Format += FormatKeyName;
@@ -128,6 +152,9 @@ namespace Winnic
             _rHalfCmbKey.Format += FormatKeyName;
             _tHalfCmbKey.Format += FormatKeyName;
             _bHalfCmbKey.Format += FormatKeyName;
+            _minCmbKey.Format += FormatKeyName;
+            _restMinCmbKey.Format += FormatKeyName;
+            _closeCmbKey.Format += FormatKeyName;
             _rCmbKey.Format += FormatKeyName;
         }
 
@@ -152,6 +179,9 @@ namespace Winnic
                     _rHalfCmbKey.Items.Add(k);
                     _tHalfCmbKey.Items.Add(k);
                     _bHalfCmbKey.Items.Add(k);
+                    _minCmbKey.Items.Add(k);
+                    _restMinCmbKey.Items.Add(k);
+                    _closeCmbKey.Items.Add(k);
                     _rCmbKey.Items.Add(k);
                 }
             }
@@ -162,6 +192,9 @@ namespace Winnic
             if (!_rHalfCmbKey.Items.Contains(Keys.Right)) { _rHalfCmbKey.Items.Add(Keys.Right); }
             if (!_tHalfCmbKey.Items.Contains(Keys.Up)) { _tHalfCmbKey.Items.Add(Keys.Up); }
             if (!_bHalfCmbKey.Items.Contains(Keys.Down)) { _bHalfCmbKey.Items.Add(Keys.Down); }
+            if (!_closeCmbKey.Items.Contains(Keys.Q)) { _closeCmbKey.Items.Add(Keys.Q); }
+            if (!_minCmbKey.Items.Contains(Keys.W)) { _minCmbKey.Items.Add(Keys.W); }
+            if (!_restMinCmbKey.Items.Contains(Keys.E)) { _restMinCmbKey.Items.Add(Keys.E); }
             if (!_rCmbKey.Items.Contains(Keys.Back)) { _rCmbKey.Items.Add(Keys.Back); }
 
             _chkCtrl.Checked = CurrentSettings.CommonModifiers.HasFlag(HotkeyModifiers.Control);
@@ -205,6 +238,21 @@ namespace Winnic
             _rCmbKey.SelectedItem = CurrentSettings.RestoreKey;
             if (_rCmbKey.SelectedIndex < 0 && _rCmbKey.Items.Count > 0)
                 _rCmbKey.SelectedIndex = 0;
+
+            if (!_minCmbKey.Items.Contains(CurrentSettings.MinimizeKey)) _minCmbKey.Items.Add(CurrentSettings.MinimizeKey);
+            _minCmbKey.SelectedItem = CurrentSettings.MinimizeKey;
+            if (_minCmbKey.SelectedIndex < 0 && _minCmbKey.Items.Count > 0)
+                _minCmbKey.SelectedIndex = 0;
+
+            if (!_restMinCmbKey.Items.Contains(CurrentSettings.RestoreMinimizedKey)) _restMinCmbKey.Items.Add(CurrentSettings.RestoreMinimizedKey);
+            _restMinCmbKey.SelectedItem = CurrentSettings.RestoreMinimizedKey;
+            if (_restMinCmbKey.SelectedIndex < 0 && _restMinCmbKey.Items.Count > 0)
+                _restMinCmbKey.SelectedIndex = 0;
+
+            if (!_closeCmbKey.Items.Contains(CurrentSettings.CloseKey)) _closeCmbKey.Items.Add(CurrentSettings.CloseKey);
+            _closeCmbKey.SelectedItem = CurrentSettings.CloseKey;
+            if (_closeCmbKey.SelectedIndex < 0 && _closeCmbKey.Items.Count > 0)
+                _closeCmbKey.SelectedIndex = 0;
         }
 
         private void OnOk(object? sender, EventArgs e)
@@ -223,6 +271,9 @@ namespace Winnic
             var topKey = _tHalfCmbKey.SelectedItem is Keys tk ? tk : Keys.Up;
             var bottomKey = _bHalfCmbKey.SelectedItem is Keys bk ? bk : Keys.Down;
             var rkey = _rCmbKey.SelectedItem is Keys rk ? rk : Keys.Back;
+            var minimizeKey = _minCmbKey.SelectedItem is Keys mk2 ? mk2 : Keys.W;
+            var restoreMinimizedKey = _restMinCmbKey.SelectedItem is Keys umk ? umk : Keys.E;
+            var closeKey = _closeCmbKey.SelectedItem is Keys cx ? cx : Keys.Q;
 
             CurrentSettings = new AppSettings
             {
@@ -234,6 +285,9 @@ namespace Winnic
                 TopKey = topKey,
                 BottomKey = bottomKey,
                 RestoreKey = rkey,
+                MinimizeKey = minimizeKey,
+                RestoreMinimizedKey = restoreMinimizedKey,
+                CloseKey = closeKey,
                 AutoStart = _chkAutostart.Checked
             };
         }

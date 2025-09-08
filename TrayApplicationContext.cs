@@ -103,6 +103,31 @@ namespace Winnic
             {
                 ShowBalloon($"Failed to register bottom-half hotkey: {ex.Message}");
             }
+
+            try
+            {
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.MinimizeKey, OnMinimizeHotkey);
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Failed to register minimize hotkey: {ex.Message}");
+            }
+            try
+            {
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.RestoreMinimizedKey, OnRestoreMinimizedHotkey);
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Failed to register restore-minimized hotkey: {ex.Message}");
+            }
+            try
+            {
+                _hotkeyManager.Register(cfg.CommonModifiers, cfg.CloseKey, OnCloseHotkey);
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Failed to register close-window hotkey: {ex.Message}");
+            }
         }
 
         private void OnHotkeyPressed()
@@ -184,6 +209,42 @@ namespace Winnic
             try
             {
                 _windowCenterService.SnapForegroundWindowBottomHalf();
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Error: {ex.Message}");
+            }
+        }
+
+        private void OnMinimizeHotkey()
+        {
+            try
+            {
+                _windowCenterService.MinimizeForegroundWindow();
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Error: {ex.Message}");
+            }
+        }
+
+        private void OnRestoreMinimizedHotkey()
+        {
+            try
+            {
+                _windowCenterService.RestoreLastMinimizedWindow();
+            }
+            catch (Exception ex)
+            {
+                ShowBalloon($"Error: {ex.Message}");
+            }
+        }
+
+        private void OnCloseHotkey()
+        {
+            try
+            {
+                _windowCenterService.CloseForegroundWindow();
             }
             catch (Exception ex)
             {

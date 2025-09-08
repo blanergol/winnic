@@ -204,6 +204,15 @@ namespace Winnic
 
         private const int SW_SHOWMAXIMIZED = 3;
         private const int SW_SHOWNORMAL = 1;
+        private const int SW_MINIMIZE = 6;
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        private const uint WM_CLOSE = 0x0010;
 
         public void MaximizeForegroundWindow()
         {
@@ -265,6 +274,33 @@ namespace Winnic
                 // If failed, just show as normal
                 ShowWindow(hwnd, SW_SHOWNORMAL);
             }
+        }
+
+        private IntPtr _lastMinimizedWindow;
+
+        public void MinimizeForegroundWindow()
+        {
+            var hwnd = GetForegroundWindow();
+            if (hwnd == IntPtr.Zero)
+                throw new InvalidOperationException("No active window");
+            _lastMinimizedWindow = hwnd;
+            ShowWindow(hwnd, SW_MINIMIZE);
+        }
+
+        public void RestoreLastMinimizedWindow()
+        {
+            if (_lastMinimizedWindow == IntPtr.Zero)
+                throw new InvalidOperationException("No minimized window to restore");
+            ShowWindow(_lastMinimizedWindow, SW_SHOWNORMAL);
+            SetForegroundWindow(_lastMinimizedWindow);
+        }
+
+        public void CloseForegroundWindow()
+        {
+            var hwnd = GetForegroundWindow();
+            if (hwnd == IntPtr.Zero)
+                throw new InvalidOperationException("No active window");
+            SendMessage(hwnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
         }
     }
 }

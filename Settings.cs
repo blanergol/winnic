@@ -27,6 +27,14 @@ namespace Winnic
 
         // Autostart
         public bool AutoStart { get; set; } = false;
+
+        // Additional window commands
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Keys MinimizeKey { get; set; } = Keys.W; // Minimize active window — key (Ctrl+Alt+W)
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Keys RestoreMinimizedKey { get; set; } = Keys.E; // Restore last minimized window — key (Ctrl+Alt+E)
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Keys CloseKey { get; set; } = Keys.Q; // Close active window — key (Ctrl+Alt+Q)
     }
 }
 

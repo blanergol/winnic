@@ -6,22 +6,37 @@ namespace Winnic
     {
         public static Icon CreateAppIcon()
         {
-            using var bmp = new Bitmap(32, 32);
-            using (var g = Graphics.FromImage(bmp))
+            var svgPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "favicon.svg");
+            if (!File.Exists(svgPath))
             {
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.Clear(Color.Transparent);
-
-                // Simple icon: square with a centering cross
-                using var bg = new SolidBrush(Color.FromArgb(30, 144, 255));
-                g.FillRectangle(bg, 0, 0, 32, 32);
-                using var pen = new Pen(Color.White, 3);
-                g.DrawLine(pen, 16, 4, 16, 28);
-                g.DrawLine(pen, 4, 16, 28, 16);
-                g.DrawEllipse(Pens.White, 10, 10, 12, 12);
+                // Fallback to simple generated icon if SVG not found
+                using var bmpFallback = new Bitmap(32, 32);
+                using (var g = Graphics.FromImage(bmpFallback))
+                {
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                    g.Clear(Color.Transparent);
+                    using var bg = new SolidBrush(Color.FromArgb(30, 144, 255));
+                    g.FillRectangle(bg, 0, 0, 32, 32);
+                    using var pen = new Pen(Color.White, 3);
+                    g.DrawLine(pen, 16, 4, 16, 28);
+                    g.DrawLine(pen, 4, 16, 28, 16);
+                    g.DrawEllipse(Pens.White, 10, 10, 12, 12);
+                }
+                var hIconFallback = bmpFallback.GetHicon();
+                try
+                {
+                    using var tmpIcon = Icon.FromHandle(hIconFallback);
+                    return (Icon)tmpIcon.Clone();
+                }
+                finally
+                {
+                    NativeMethods.DestroyIcon(hIconFallback);
+                }
             }
 
-            // Create an icon and immediately clone it to release the original handle
+            // Render SVG to bitmap and convert to icon
+            var svgDoc = Svg.SvgDocument.Open(svgPath);
+            using var bmp = svgDoc.Draw(32, 32);
             var hIcon = bmp.GetHicon();
             try
             {
@@ -30,7 +45,6 @@ namespace Winnic
             }
             finally
             {
-                // Destroy the handle to avoid a leak
                 NativeMethods.DestroyIcon(hIcon);
             }
         }
