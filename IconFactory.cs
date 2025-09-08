@@ -12,7 +12,7 @@ namespace Winnic
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.Clear(Color.Transparent);
 
-                // Простая иконка: квадрат с крестом-центровкой
+                // Simple icon: square with a centering cross
                 using var bg = new SolidBrush(Color.FromArgb(30, 144, 255));
                 g.FillRectangle(bg, 0, 0, 32, 32);
                 using var pen = new Pen(Color.White, 3);
@@ -21,7 +21,7 @@ namespace Winnic
                 g.DrawEllipse(Pens.White, 10, 10, 12, 12);
             }
 
-            // Создаём иконку и сразу же клонируем её, чтобы освободить исходный дескриптор
+            // Create an icon and immediately clone it to release the original handle
             var hIcon = bmp.GetHicon();
             try
             {
@@ -30,7 +30,7 @@ namespace Winnic
             }
             finally
             {
-                // Уничтожаем дескриптор, чтобы не было утечки
+                // Destroy the handle to avoid a leak
                 NativeMethods.DestroyIcon(hIcon);
             }
         }

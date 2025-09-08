@@ -34,7 +34,7 @@ namespace Winnic
             int id = _nextId++;
             if (!RegisterHotKey(Handle, id, (int)modifiers, (int)key))
             {
-                throw new InvalidOperationException("Не удалось зарегистрировать горячую клавишу. Возможно, она уже занята.");
+                throw new InvalidOperationException("Failed to register a global hotkey. It may already be in use.");
             }
             _callbacks[id] = callback;
             return id;

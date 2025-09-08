@@ -4,28 +4,28 @@ namespace Winnic
 {
     internal sealed class AppSettings
     {
-        // Общие модификаторы для всех хоткеев
+        // Common modifiers for all hotkeys
         public HotkeyModifiers CommonModifiers { get; set; } = HotkeyModifiers.Control | HotkeyModifiers.Alt;
 
-        // Основные клавиши по командам
+        // Primary keys per command
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys Key { get; set; } = Keys.C; // Центрирование — клавиша
+        public Keys Key { get; set; } = Keys.C; // Center — key
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys MaximizeKey { get; set; } = Keys.Enter; // Разворот — клавиша
+        public Keys MaximizeKey { get; set; } = Keys.Enter; // Maximize — key
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys RestoreKey { get; set; } = Keys.Back; // Восстановление — клавиша
+        public Keys RestoreKey { get; set; } = Keys.Back; // Restore — key
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys LeftKey { get; set; } = Keys.Left; // Левая половина — клавиша
+        public Keys LeftKey { get; set; } = Keys.Left; // Left half — key
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys RightKey { get; set; } = Keys.Right; // Правая половина — клавиша
+        public Keys RightKey { get; set; } = Keys.Right; // Right half — key
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys TopKey { get; set; } = Keys.Up; // Верхняя половина — клавиша
+        public Keys TopKey { get; set; } = Keys.Up; // Top half — key
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public Keys BottomKey { get; set; } = Keys.Down; // Нижняя половина — клавиша
+        public Keys BottomKey { get; set; } = Keys.Down; // Bottom half — key
 
-        // Автозапуск
+        // Autostart
         public bool AutoStart { get; set; } = false;
     }
 }

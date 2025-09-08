@@ -22,9 +22,9 @@ namespace Winnic
             _autoStartService = new AutoStartService();
 
             _menu = new ContextMenuStrip();
-            _settingsItem = new ToolStripMenuItem("Настройки…", null, OnOpenSettings);
-            _aboutItem = new ToolStripMenuItem("О программе…", null, OnOpenAbout);
-            _exitItem = new ToolStripMenuItem("Выход", null, OnExit);
+            _settingsItem = new ToolStripMenuItem("Settings", null, OnOpenSettings);
+            _aboutItem = new ToolStripMenuItem("About", null, OnOpenAbout);
+            _exitItem = new ToolStripMenuItem("Exit", null, OnExit);
             _menu.Items.AddRange(new ToolStripItem[] { _settingsItem, new ToolStripSeparator(), _aboutItem, new ToolStripSeparator(), _exitItem });
 
             _icon = IconFactory.CreateAppIcon();
@@ -38,7 +38,7 @@ namespace Winnic
 
             RegisterHotkeys();
 
-            // Применить автозапуск по настройкам при старте
+            // Apply autostart according to settings on startup
             var cfg = _settingsService.Load();
             _autoStartService.Apply(cfg.AutoStart);
         }
@@ -53,7 +53,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Не удалось зарегистрировать хоткей центрирования: {ex.Message}");
+                ShowBalloon($"Failed to register centering hotkey: {ex.Message}");
             }
             try
             {
@@ -61,7 +61,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Не удалось зарегистрировать хоткей разворота: {ex.Message}");
+                ShowBalloon($"Failed to register maximize hotkey: {ex.Message}");
             }
             try
             {
@@ -69,7 +69,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Не удалось зарегистрировать хоткей восстановления: {ex.Message}");
+                ShowBalloon($"Failed to register restore hotkey: {ex.Message}");
             }
             try
             {
@@ -77,7 +77,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Не удалось зарегистрировать хоткей левой половины: {ex.Message}");
+                ShowBalloon($"Failed to register left-half hotkey: {ex.Message}");
             }
             try
             {
@@ -85,7 +85,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Не удалось зарегистрировать хоткей правой половины: {ex.Message}");
+                ShowBalloon($"Failed to register right-half hotkey: {ex.Message}");
             }
             try
             {
@@ -93,7 +93,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Не удалось зарегистрировать хоткей верхней половины: {ex.Message}");
+                ShowBalloon($"Failed to register top-half hotkey: {ex.Message}");
             }
             try
             {
@@ -101,7 +101,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Не удалось зарегистрировать хоткей нижней половины: {ex.Message}");
+                ShowBalloon($"Failed to register bottom-half hotkey: {ex.Message}");
             }
         }
 
@@ -113,7 +113,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Ошибка: {ex.Message}");
+                ShowBalloon($"Error: {ex.Message}");
             }
         }
 
@@ -127,7 +127,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Ошибка: {ex.Message}");
+                ShowBalloon($"Error: {ex.Message}");
             }
         }
 
@@ -139,7 +139,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Ошибка: {ex.Message}");
+                ShowBalloon($"Error: {ex.Message}");
             }
         }
 
@@ -151,7 +151,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Ошибка: {ex.Message}");
+                ShowBalloon($"Error: {ex.Message}");
             }
         }
 
@@ -163,7 +163,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Ошибка: {ex.Message}");
+                ShowBalloon($"Error: {ex.Message}");
             }
         }
 
@@ -175,7 +175,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Ошибка: {ex.Message}");
+                ShowBalloon($"Error: {ex.Message}");
             }
         }
 
@@ -187,7 +187,7 @@ namespace Winnic
             }
             catch (Exception ex)
             {
-                ShowBalloon($"Ошибка: {ex.Message}");
+                ShowBalloon($"Error: {ex.Message}");
             }
         }
 
@@ -198,7 +198,7 @@ namespace Winnic
             {
                 _settingsService.Save(form.CurrentSettings);
                 RegisterHotkeys();
-                ShowBalloon("Горячие клавиши обновлены");
+                ShowBalloon("Hotkeys updated");
                 _autoStartService.Apply(form.CurrentSettings.AutoStart);
             }
         }

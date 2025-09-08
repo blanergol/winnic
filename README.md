@@ -1,96 +1,102 @@
 # Winnic
 
-Небольшое Windows‑приложение (WinForms, .NET 9) для работы из системного трея, которое помогает управлять текущим активным окном:
-- центрирует активное окно по рабочей области монитора;
-- разворачивает активное окно на весь экран;
-- восстанавливает предыдущее положение/размер активного окна;
-- позволяет настраивать горячие клавиши и автозапуск через окно настроек.
+Small Windows application (WinForms, .NET 9) that lives in the system tray and helps you manage the current active window:
+- center the active window within the monitor's work area;
+- maximize the active window to full screen;
+- restore the previous position/size of the active window;
+- snap the active window to left/right halves and top/bottom halves;
+- configure hotkeys and autostart via the Settings window.
 
-## Возможности
+## Features
 
-- Центрирование активного окна: по умолчанию `Ctrl + Alt + C`.
-- Разворот активного окна на весь экран: по умолчанию `Ctrl + Alt + Enter`.
-- Восстановление последнего положения активного окна: по умолчанию `Ctrl + Alt + Backspace`.
-- Иконка в трее с меню: "Настройки…" и "Выход".
-- Автозапуск при входе в систему (вкл/выкл в настройках).
+- Center active window: default `Ctrl + Alt + C`.
+- Maximize active window: default `Ctrl + Alt + Enter`.
+- Restore last position of active window: default `Ctrl + Alt + Backspace`.
+- Snap to left half: default `Ctrl + Alt + Left`.
+- Snap to right half: default `Ctrl + Alt + Right`.
+- Snap to top half: default `Ctrl + Alt + Up`.
+- Snap to bottom half: default `Ctrl + Alt + Down`.
+- Tray icon with menu: "Settings…" and "Exit".
+- Autostart on sign-in (toggle in settings).
 
-## Архитектура и структура
+## Architecture and structure
 
-- `Program.cs` - точка входа, запускает контекст трея.
-- `TrayApplicationContext.cs` - логика иконки в трее, контекстное меню, обработка хоткеев, применение настроек и автозапуска.
-- `WindowService.cs` (`WindowCenterService`) - операции с активным окном: центрирование, разворот, сохранение и восстановление положения (WinAPI: `user32.dll`).
-- `HotkeyManager.cs` - регистрация/снятие глобальных горячих клавиш (WinAPI `RegisterHotKey`), диспетчеризация колбэков.
-- `SettingsForm.cs` - окно настроек: выбор модификаторов и клавиш для трёх действий, флаг автозапуска.
-- `SettingsService.cs` - чтение/запись настроек в `%LocalAppData%/Winnic/settings.json` (System.Text.Json).
-- `Settings.cs` - модель настроек `AppSettings` (хранит хоткеи и флаг автозапуска).
-- `AutoStartService.cs` - включение/отключение автозапуска через реестр `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
-- `IconFactory.cs` - генерация простой иконки приложения на лету.
-- `Winnic.csproj` - проект .NET 9 Windows Forms, `app.manifest` - манифест приложения.
+- `Program.cs` — entry point, starts the tray context.
+- `TrayApplicationContext.cs` — tray icon logic, context menu, hotkey handling, applying settings and autostart.
+- `WindowService.cs` (`WindowCenterService`) — operations on the active window: centering, maximize, snapping to halves, saving/restoring placement (WinAPI: `user32.dll`).
+- `HotkeyManager.cs` — global hotkey registration/unregistration (WinAPI `RegisterHotKey`), callback dispatching.
+- `SettingsForm.cs` — settings window: choose modifiers and keys for actions, autostart flag.
+- `SettingsService.cs` — read/write settings to `%LocalAppData%/Winnic/settings.json` (System.Text.Json).
+- `Settings.cs` — settings model `AppSettings` (stores hotkeys and autostart flag).
+- `AutoStartService.cs` — enable/disable autostart via `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
+- `IconFactory.cs` — generate a simple app icon on the fly.
+- `Winnic.csproj` — .NET 9 Windows Forms project, `app.manifest` — application manifest.
 
-Особенности:
-- Работает только на Windows (используются WinAPI и Windows Forms).
-- Требует права на регистрацию глобальных хоткеев (обычно достаточно обычного пользователя).
-- При первом запуске создаёт каталог `%LocalAppData%/Winnic` и файл `settings.json`.
+Notes:
+- Windows-only (uses WinAPI and Windows Forms).
+- Requires permissions to register global hotkeys (standard user is usually enough).
+- On first launch creates `%LocalAppData%/Winnic` and `settings.json`.
 
-## Зависимости
+## Requirements
 
-Среда и SDK:
-- **.NET SDK 9.0** (Windows) с поддержкой `net9.0-windows` и Windows Forms.
-- ОС **Windows 10/11**. На WSL/ Linux приложение не запускается (только сборка в кросс-режиме)
-  не поддерживается, т.к. таргет - WinExe с WinAPI.
+Environment and SDK:
+- **.NET SDK 9.0** (Windows) with `net9.0-windows` and Windows Forms.
+- **Windows 10/11** OS. WSL/Linux is not supported for running (cross-building is not supported either) because the target is WinExe with WinAPI.
 
-NuGet-пакеты: внешние пакеты не используются; применяется стандартная библиотека .NET и P/Invoke к `user32.dll`.
+NuGet packages: no external packages are used; standard .NET library and P/Invoke to `user32.dll` are used.
 
-## Сборка и запуск локально
+## Build and run locally
 
-1. Установите .NET SDK 9.0 на Windows.
-2. В командной строке откройте каталог проекта:
+1. Install .NET SDK 9.0 on Windows.
+2. Open the project folder in the command line:
    ```bash
    cd path\to\winnic
    ```
-3. Восстановите (опционально) и соберите релиз:
+3. Restore (optional) and build Release:
    ```bash
    dotnet build -c Release
    ```
-4. Запустите приложение:
+4. Run the app:
    ```bash
    dotnet run -c Release
    ```
 
-Альтернативно, можно опубликовать самодостаточный билд:
+Alternatively, publish a self-contained build:
 ```bash
 dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
 ```
-Готовый исполняемый файл будет в `bin/Release/net9.0-windows/win-x64/publish/`.
+The executable will be in `bin/Release/net9.0-windows/win-x64/publish/`.
 
-## Настройка горячих клавиш
+## Configure hotkeys
 
-Откройте меню иконки в трее → "Настройки…" и задайте сочетания для:
-- Центрирования окна
-- Разворота окна
-- Восстановления предыдущего положения
+Open the tray icon menu → "Settings…" and set hotkeys for:
+- Center window
+- Maximize window
+- Restore previous position
+- Snap to left/right halves
+- Snap to top/bottom halves
 
-По умолчанию модификатор `Alt` обязателен для восстановления. При конфликте регистрации хоткея приложение покажет уведомление.
+By default, `Alt` is always included among common modifiers. If a hotkey registration fails due to a conflict, the app will show a balloon notification.
 
-## Автозапуск
+## Autostart
 
-Опция "Автозапуск" управляет ключом в `HKCU/Software/Microsoft/Windows/CurrentVersion/Run`. При включении туда записывается путь к текущему исполняемому файлу.
+The "Autostart" option controls the registry key at `HKCU/Software/Microsoft/Windows/CurrentVersion/Run`. When enabled, it writes the path to the current executable there.
 
-## Трайбл-ноутс разработчика
+## Developer notes
 
-- Регистрация хоткеев: `HotkeyManager.Register` выбрасывает исключение при неудаче (например, если сочетание занято). Обработчики показывают балун с текстом ошибки.
-- Центрирование и работа с мониторами: используется `MonitorFromWindow`/`GetMonitorInfo` с фолбэком на `Screen.FromHandle`.
-- Восстановление положения: сохраняется `WINDOWPLACEMENT` активного окна, далее применяется через `SetWindowPlacement` с резервом `ShowWindow(SW_SHOWNORMAL)`.
-- Настройки сериализуются JSON с `JsonStringEnumConverter` для `System.Windows.Forms.Keys`.
+- Hotkey registration: `HotkeyManager.Register` throws if it fails (e.g. the combination is taken). Handlers show a balloon with the error text.
+- Centering and monitor handling: uses `MonitorFromWindow`/`GetMonitorInfo` with a fallback to `Screen.FromHandle`.
+- Placement restore: stores `WINDOWPLACEMENT` of the active window, then applies it via `SetWindowPlacement` with a fallback to `ShowWindow(SW_SHOWNORMAL)`.
+- Settings are serialized to JSON with `JsonStringEnumConverter` for `System.Windows.Forms.Keys`.
 
-## Известные ограничения
+## Known limitations
 
-- Взаимодействие с UWP/защищёнными окнами может быть ограничено.
-- Приложения, запущенные от имени администратора, могут требовать повышенных прав для корректной работы хоткеев.
-- Не предназначено для многооконных сценариев привязки за один хоткей; работает только с текущим активным окном.
+- Interaction with UWP/protected windows may be limited.
+- Apps run as Administrator may require elevated rights for hotkeys to work properly.
+- Not intended for multi-window snapping scenarios on a single hotkey; operates only on the current active window.
 
-## Лицензия
+## License
 
-Проект распространяется по лицензии MIT. Полный текст см. в файле LICENSE.txt.
+MIT License. See LICENSE.txt for the full text.
 
 

@@ -33,7 +33,7 @@ namespace Winnic
         private static string GetExecutablePath()
         {
             string path = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty;
-            // Если путь содержит пробелы — обернуть в кавычки
+            // If the path contains spaces — wrap it in quotes
             if (!string.IsNullOrEmpty(path) && path.Contains(' '))
             {
                 return "\"" + path + "\"";

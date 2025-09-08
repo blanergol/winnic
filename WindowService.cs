@@ -43,16 +43,16 @@ namespace Winnic
         {
             var hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("Нет активного окна");
+                throw new InvalidOperationException("No active window");
 
             if (!GetWindowRect(hwnd, out var rect))
-                throw new InvalidOperationException("Не удалось получить размер окна");
+                throw new InvalidOperationException("Failed to get window rectangle");
 
             var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
             var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
             bool gotMonitor = hmon != IntPtr.Zero && GetMonitorInfo(hmon, ref mi);
 
-            // Фолбэк: если GetMonitorInfo не сработал, используем Screen.FromHandle
+            // Fallback: if GetMonitorInfo failed, use Screen.FromHandle
             if (!gotMonitor)
             {
                 var screen = Screen.FromHandle(hwnd);
@@ -67,17 +67,17 @@ namespace Winnic
             int targetY = mi.rcWork.Top + (mi.rcWork.Bottom - mi.rcWork.Top - height) / 2;
 
             if (!MoveWindow(hwnd, targetX, targetY, width, height, true))
-                throw new InvalidOperationException("Не удалось переместить окно");
+                throw new InvalidOperationException("Failed to move window");
         }
 
         public void SnapForegroundWindowLeftHalf()
         {
             var hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("Нет активного окна");
+                throw new InvalidOperationException("No active window");
 
             if (!GetWindowRect(hwnd, out var rect))
-                throw new InvalidOperationException("Не удалось получить размер окна");
+                throw new InvalidOperationException("Failed to get window rectangle");
 
             var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
             var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
@@ -97,20 +97,20 @@ namespace Winnic
             int targetX = mi.rcWork.Left;
             int targetY = mi.rcWork.Top;
 
-            // Сначала вернуть окно в нормальное состояние
+            // First restore the window to normal state
             ShowWindow(hwnd, SW_SHOWNORMAL);
             if (!MoveWindow(hwnd, targetX, targetY, targetWidth, targetHeight, true))
-                throw new InvalidOperationException("Не удалось переместить окно");
+                throw new InvalidOperationException("Failed to move window");
         }
 
         public void SnapForegroundWindowRightHalf()
         {
             var hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("Нет активного окна");
+                throw new InvalidOperationException("No active window");
 
             if (!GetWindowRect(hwnd, out var rect))
-                throw new InvalidOperationException("Не удалось получить размер окна");
+                throw new InvalidOperationException("Failed to get window rectangle");
 
             var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
             var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
@@ -132,17 +132,17 @@ namespace Winnic
 
             ShowWindow(hwnd, SW_SHOWNORMAL);
             if (!MoveWindow(hwnd, targetX, targetY, targetWidth, targetHeight, true))
-                throw new InvalidOperationException("Не удалось переместить окно");
+                throw new InvalidOperationException("Failed to move window");
         }
 
         public void SnapForegroundWindowTopHalf()
         {
             var hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("Нет активного окна");
+                throw new InvalidOperationException("No active window");
 
             if (!GetWindowRect(hwnd, out var rect))
-                throw new InvalidOperationException("Не удалось получить размер окна");
+                throw new InvalidOperationException("Failed to get window rectangle");
 
             var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
             var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
@@ -164,17 +164,17 @@ namespace Winnic
 
             ShowWindow(hwnd, SW_SHOWNORMAL);
             if (!MoveWindow(hwnd, targetX, targetY, targetWidth, targetHeight, true))
-                throw new InvalidOperationException("Не удалось переместить окно");
+                throw new InvalidOperationException("Failed to move window");
         }
 
         public void SnapForegroundWindowBottomHalf()
         {
             var hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("Нет активного окна");
+                throw new InvalidOperationException("No active window");
 
             if (!GetWindowRect(hwnd, out var rect))
-                throw new InvalidOperationException("Не удалось получить размер окна");
+                throw new InvalidOperationException("Failed to get window rectangle");
 
             var hmon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
             var mi = new MONITORINFO { cbSize = Marshal.SizeOf(typeof(MONITORINFO)) };
@@ -196,7 +196,7 @@ namespace Winnic
 
             ShowWindow(hwnd, SW_SHOWNORMAL);
             if (!MoveWindow(hwnd, targetX, targetY, targetWidth, targetHeight, true))
-                throw new InvalidOperationException("Не удалось переместить окно");
+                throw new InvalidOperationException("Failed to move window");
         }
 
         [DllImport("user32.dll")]
@@ -209,11 +209,11 @@ namespace Winnic
         {
             var hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("Нет активного окна");
+                throw new InvalidOperationException("No active window");
             ShowWindow(hwnd, SW_SHOWMAXIMIZED);
         }
 
-        // --- Сохранение/восстановление положения окна ---
+        // --- Save/restore window placement ---
         [StructLayout(LayoutKind.Sequential)]
         private struct POINT
         {
@@ -255,14 +255,14 @@ namespace Winnic
         {
             var hwnd = GetForegroundWindow();
             if (hwnd == IntPtr.Zero)
-                throw new InvalidOperationException("Нет активного окна");
+                throw new InvalidOperationException("No active window");
             if (_lastPlacement == null)
                 return;
             var wp = _lastPlacement.Value;
             wp.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
             if (!SetWindowPlacement(hwnd, ref wp))
             {
-                // если не удалось, просто показать как обычное
+                // If failed, just show as normal
                 ShowWindow(hwnd, SW_SHOWNORMAL);
             }
         }

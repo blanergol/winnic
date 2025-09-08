@@ -8,7 +8,7 @@ namespace Winnic
     {
         public AboutForm()
         {
-            Text = "О программе Winnic";
+            Text = "About Winnic";
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -21,10 +21,10 @@ namespace Winnic
             var company = GetAttribute<AssemblyCompanyAttribute, string?>(a => a.Company) ?? "";
             var copyright = GetAttribute<AssemblyCopyrightAttribute, string?>(a => a.Copyright)
                             ?? $"© {DateTime.Now:yyyy} {company}";
-            var description = GetAttribute<AssemblyDescriptionAttribute, string?>(a => a.Description) ?? "Утилита для управления расположением активного окна в Windows.";
+            var description = GetAttribute<AssemblyDescriptionAttribute, string?>(a => a.Description) ?? "A small utility to manage the position of the active window in Windows.";
 
-            var ver = new Label { Text = $"Версия: {versionDisplay}", AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill, Margin = Padding.Empty };
-            var dev = new Label { Text = string.IsNullOrWhiteSpace(company) ? "Разработчик: —" : $"Разработчик: blanergol", AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
+            var ver = new Label { Text = $"Version: {versionDisplay}", AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill, Margin = Padding.Empty };
+            var dev = new Label { Text = string.IsNullOrWhiteSpace(company) ? "Developer: —" : $"Developer: blanergol", AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
             var copy = new Label { Text = copyright, AutoSize = true, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
             var desc = new Label { Text = description, AutoSize = true, MaximumSize = new Size(420, 0), TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill, Margin = Padding.Empty };
 

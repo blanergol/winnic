@@ -14,9 +14,9 @@ namespace Winnic
         private readonly ComboBox _tHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
         private readonly ComboBox _bHalfCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
 
-        private readonly CheckBox _chkAutostart = new CheckBox { Text = "Автозапуск при старте Windows", AutoSize = true };
+        private readonly CheckBox _chkAutostart = new CheckBox { Text = "Launch at Windows startup", AutoSize = true };
         private readonly Button _btnOk = new Button { Text = "OK", DialogResult = DialogResult.OK, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(12, 6, 12, 6) };
-        private readonly Button _btnCancel = new Button { Text = "Отмена", DialogResult = DialogResult.Cancel, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(12, 6, 12, 6) };
+        private readonly Button _btnCancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(12, 6, 12, 6) };
 
         private readonly ComboBox _rCmbKey = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
 
@@ -25,7 +25,7 @@ namespace Winnic
         public SettingsForm(AppSettings initial)
         {
             CurrentSettings = initial;
-            Text = "Настройки Winnic";
+            Text = "Winnic Settings";
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -35,7 +35,7 @@ namespace Winnic
             MinimumSize = new Size(540, 540);
 
             var modsPanel = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(10) };
-            var modsLabel = new Label { Text = "Общие модификаторы:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            var modsLabel = new Label { Text = "Common modifiers:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
             modsPanel.Controls.Add(modsLabel);
             modsPanel.SetFlowBreak(modsLabel, true);
             modsPanel.Controls.AddRange(new Control[] { _chkCtrl, _chkAlt, _chkShift, _chkWin });
@@ -53,43 +53,43 @@ namespace Winnic
 
             int rowIndex = 0;
 
-            var lblCenter = new Label { Text = "Центрирование:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            var lblCenter = new Label { Text = "Center:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
             keysTable.Controls.Add(lblCenter, 0, rowIndex);
             _cmbKey.Width = 200;
             _cmbKey.Anchor = AnchorStyles.Left;
             keysTable.Controls.Add(_cmbKey, 1, rowIndex++);
 
-            var lblMax = new Label { Text = "На весь экран:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            var lblMax = new Label { Text = "Maximize:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
             keysTable.Controls.Add(lblMax, 0, rowIndex);
             _mCmbKey.Width = 200;
             _mCmbKey.Anchor = AnchorStyles.Left;
             keysTable.Controls.Add(_mCmbKey, 1, rowIndex++);
 
-            var lblLeft = new Label { Text = "Левая половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            var lblLeft = new Label { Text = "Left half:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
             keysTable.Controls.Add(lblLeft, 0, rowIndex);
             _lCmbKey.Width = 200;
             _lCmbKey.Anchor = AnchorStyles.Left;
             keysTable.Controls.Add(_lCmbKey, 1, rowIndex++);
 
-            var lblRightHalf = new Label { Text = "Правая половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            var lblRightHalf = new Label { Text = "Right half:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
             keysTable.Controls.Add(lblRightHalf, 0, rowIndex);
             _rHalfCmbKey.Width = 200;
             _rHalfCmbKey.Anchor = AnchorStyles.Left;
             keysTable.Controls.Add(_rHalfCmbKey, 1, rowIndex++);
 
-            var lblTopHalf = new Label { Text = "Верхняя половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            var lblTopHalf = new Label { Text = "Top half:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
             keysTable.Controls.Add(lblTopHalf, 0, rowIndex);
             _tHalfCmbKey.Width = 200;
             _tHalfCmbKey.Anchor = AnchorStyles.Left;
             keysTable.Controls.Add(_tHalfCmbKey, 1, rowIndex++);
 
-            var lblBottomHalf = new Label { Text = "Нижняя половина:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            var lblBottomHalf = new Label { Text = "Bottom half:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
             keysTable.Controls.Add(lblBottomHalf, 0, rowIndex);
             _bHalfCmbKey.Width = 200;
             _bHalfCmbKey.Anchor = AnchorStyles.Left;
             keysTable.Controls.Add(_bHalfCmbKey, 1, rowIndex++);
 
-            var lblRestore = new Label { Text = "Восстановление:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
+            var lblRestore = new Label { Text = "Restore:", AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Padding = new Padding(0, 6, 6, 0) };
             keysTable.Controls.Add(lblRestore, 0, rowIndex);
             _rCmbKey.Width = 200;
             _rCmbKey.Anchor = AnchorStyles.Left;
@@ -102,7 +102,7 @@ namespace Winnic
             buttons.Controls.AddRange(new Control[] { _btnOk, _btnCancel });
 
             var content = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
-            // Порядок добавления важен для DockStyle.Top: последний добавленный будет сверху
+            // The order of adding matters for DockStyle.Top: the last added will appear on top
             content.Controls.Add(autostartPanel);
             content.Controls.Add(keysTable);
             content.Controls.Add(modsPanel);
@@ -141,7 +141,7 @@ namespace Winnic
 
         private void OnLoad(object? sender, EventArgs e)
         {
-            // Заполняем списки доступных основных клавиш
+            // Populate combos with available primary keys
             foreach (Keys k in Enum.GetValues(typeof(Keys)))
             {
                 if ((int)k >= (int)Keys.A && (int)k <= (int)Keys.Z || (int)k >= (int)Keys.F1 && (int)k <= (int)Keys.F24)
@@ -155,7 +155,7 @@ namespace Winnic
                     _rCmbKey.Items.Add(k);
                 }
             }
-            // Добавим популярные дополнительные клавиши
+            // Add popular additional keys
             if (!_cmbKey.Items.Contains(Keys.Enter)) { _cmbKey.Items.Add(Keys.Enter); }
             if (!_mCmbKey.Items.Contains(Keys.Enter)) { _mCmbKey.Items.Add(Keys.Enter); }
             if (!_lCmbKey.Items.Contains(Keys.Left)) { _lCmbKey.Items.Add(Keys.Left); }
@@ -165,7 +165,7 @@ namespace Winnic
             if (!_rCmbKey.Items.Contains(Keys.Back)) { _rCmbKey.Items.Add(Keys.Back); }
 
             _chkCtrl.Checked = CurrentSettings.CommonModifiers.HasFlag(HotkeyModifiers.Control);
-            // Alt обязателен: принудительно включаем и делаем недоступным для снятия
+            // Alt is required: force enable and make it non-disableable
             _chkAlt.Checked = true;
             _chkShift.Checked = CurrentSettings.CommonModifiers.HasFlag(HotkeyModifiers.Shift);
             _chkWin.Checked = CurrentSettings.CommonModifiers.HasFlag(HotkeyModifiers.Win);
@@ -211,7 +211,7 @@ namespace Winnic
         {
             var commonMods = HotkeyModifiers.None;
             if (_chkCtrl.Checked) commonMods |= HotkeyModifiers.Control;
-            // Alt обязателен
+            // Alt is required
             commonMods |= HotkeyModifiers.Alt;
             if (_chkShift.Checked) commonMods |= HotkeyModifiers.Shift;
             if (_chkWin.Checked) commonMods |= HotkeyModifiers.Win;
