@@ -1,4 +1,5 @@
 # Winnic
+![UI](assets/img1.png)
 
 Small Windows application (WinForms, .NET 9) that lives in the system tray and helps you manage the current active window:
 - center the active window within the monitor's work area;
